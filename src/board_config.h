@@ -4,7 +4,7 @@
 
 #define CPU_CLOCK_SPEED 48000000
 
-#define DIO_LED_R 6
-#define DIO_LED_G 7
+#define DIO_LED_R 0
+#define DIO_LED_G 2
 
 #endif /* _BOARD_CONFIG_H_INCLUDED_ */

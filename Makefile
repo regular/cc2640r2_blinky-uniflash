@@ -10,7 +10,7 @@ BUILD_DIR = ./_build
 C_SOURCES := \
 	src/main.c \
 	src/board_config.c \
-	ti/devices/cc26x0/startup_files/startup_gcc.c
+	ti/devices/cc26x0r2/startup_files/startup_gcc.c
 
 CFLAGS += -Os -g
 
@@ -29,6 +29,8 @@ LD=$(PREFIX)-gcc
 AS=$(PREFIX)-gcc
 OBJDUMP=$(PREFIX)-objdump
 OBJCOPY=$(PREFIX)-objcopy
+
+UF=/opt/ti/uniflash/dslite.sh 
 
 # CFLAGS for all sources.
 CFLAGS += -mthumb -mcpu=cortex-m3
@@ -130,7 +132,7 @@ $(BUILD_DIR)/$(DRIVERLIB_DIR)/%.o: CFLAGS+=$(CFLAGS_DRIVERLIB)
 # Build Rules
 #
 
-.PHONY: clean all flash disasm
+.PHONY: clean all flash uflash disasm
 
 all: $(TARGET).elf $(TARGET).hex
 
@@ -141,6 +143,9 @@ clean:
 
 flash: $(TARGET).hex
 	openocd -f ocd_flash.cfg
+
+uflash: $(TARGET).hex
+	$(UF) --config=/opt/ti/uniflash/deskdb/content/TICloudAgent/linux/ccs_base/arm/cc13xx_cc26xx_2pin_cJTAG_XDS110.ccxml --reset 0 $<
 
 disasm: $(TARGET).elf
 	$(OBJDUMP) -d $(TARGET).elf > $(TARGET).disasm

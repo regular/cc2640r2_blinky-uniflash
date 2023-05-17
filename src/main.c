@@ -28,7 +28,7 @@ void main(void) {
     GPIO_clearDio(DIO_LED_G);
 
     /* Set SysTick to fire every so often. */
-    SysTickPeriodSet(CPU_CLOCK_SPEED / 5);
+    SysTickPeriodSet(CPU_CLOCK_SPEED / 2);
     SysTickIntEnable();
     SysTickEnable();
 

@@ -1,17 +1,19 @@
-# cc2640r2_blinky
-Baremetal blinky example for the TI CC2640R2 Launchpad. Makes uses of GCC, Make, and OpenOCD.
+# cc2640r2_blinky-uniflash
+Baremetal blinky example for the TI CC2640R2 Launchpad. Makes uses of GCC, Make, and TI's uniflash ("dslite")
 
 ## Summary
 
 This is an example project for the TI CC2640R2 Launchpad, designed to be built using standard tools.
 Code Composer Studio (aka CCS) is not required to build, flash, or debug this project, i.e. it can all be done via the command line.
 
+Uniflash however is required to flash. On Arch for example, you can get it via AUR.
+
 ## Dependencies
 
 * `arm-none-eabi-gcc` with Cortex-M3 support. Any recent build, either from ARM or from your distro's official package repositories should work.
-* `openocd` from a recent version. The changes to support the CC2640 are very new (as of 2018), so it is **highly** recommended to build from Git.
 * The [TI CC2640R2 SDK](http://www.ti.com/tool/download/SIMPLELINK-CC2640R2-SDK) must be installed. Currently this is available only as a Windows
   installer, but the files can be installed via WINE and then copied elsewhere.
+* TI Uniflash
 
 ## Building
 
@@ -19,16 +21,6 @@ Code Composer Studio (aka CCS) is not required to build, flash, or debug this pr
   * `export CC2640_SDK="/opt/ti/simplelink_cc2640r2_sdk_1_50_00_58"`
 2. If using a GCC installation that is not in your `$PATH`, modify `$CC2640_SDK/imports.mak` to point to the correct `GCC_ARMCOMPILER` location.
 3. Run `make` in the project root.
-
-## Debugging
-
-1. After building, connect the Launchpad and run `make flash`. This will use OpenOCD to program the board.
-2. After a successful flash, the board should be running. To connect GDB:
-  * Run `openocd`. This should create a GDB server running on port `:3333`.
-  * In another terminal, launch `arm-none-eabi-gdb blinky.elf`. If the `.gdbinit` file is sourced, it will connect to OpenOCD automatically.
-    Otherwise, within GDB, issue `target remote :3333`
-3. Reset the board by issuing `monitor reset init` followed by `set $pc=$pc` (this is a workaround to resync GDB's program counter).
-4. You may now set breakpoints and otherwise control the CPU via GDB.
 
 ## Known Issues
 
