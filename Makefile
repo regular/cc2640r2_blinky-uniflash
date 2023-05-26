@@ -6,18 +6,18 @@
 TARGET=blinky
 BUILD_DIR = ./_build
 
-# Anything with ti/ at the beginning should be searched via the vpath set up for $CC2640_SDK.
+# Anything with ti/ at the beginning should be searched via the vpath set up for $TICCSDK.
 C_SOURCES := \
 	src/main.c \
 	src/board_config.c \
-	ti/devices/cc26x0r2/startup_files/startup_gcc.c
+	$(TICCDEVICESRC)/startup_files/startup_gcc.c
 
-CFLAGS += -Os -g
+CFLAGS += -O3 -g
 
 DEFINES += -DDeviceFamily_CC26X0R2
 
-INCLUDES += -I$(CC2640_SDK)/source
-INCLUDES += -I$(CC2640_SDK)/source/ti/devices/cc26x0r2
+INCLUDES += -I$(TICCSDK)/source
+INCLUDES += -I$(TICCSDK)/source/$(TICCDEVICESRC)
 
 #
 # Advanced project settings
@@ -39,7 +39,7 @@ CFLAGS += -ffunction-sections -fdata-sections
 # Error on implicit function declaration.
 CFLAGS += -Werror=implicit-function-declaration
 
-LDFLAGS += -Wl,-T"$(CC2640_SDK)/source/ti/devices/cc26x0r2/linker_files/cc26x0r2f.lds"
+LDFLAGS += -Wl,-T"$(TICCSDK)/source/$(TICCDEVICESRC)/linker_files/cc26x0r2f.lds"
 LDFLAGS += -Wl,--gc-sections
 LDFLAGS += -mthumb -mcpu=cortex-m3
 LDFLAGS += -nostartfiles
@@ -48,11 +48,11 @@ LDFLAGS += -nostartfiles
 # Build sanity checks.
 #
 
-ifeq ($(CC2640_SDK),)
-  $(error CC2640_SDK is not defined)
+ifeq ($(TICCSDK),)
+  $(error TICCSDK is not defined)
 endif
 
-include $(CC2640_SDK)/imports.mak
+include $(TICCSDK)/imports.mak
 
 ifeq ($(GCC_ARMCOMPILER),)
   GCC_TEST
@@ -68,9 +68,9 @@ else
   SS=@
 endif
 
-vpath %.c $(CC2640_SDK)/source
+vpath %.c $(TICCSDK)/source
 
-DRIVERLIB_DIR := ti/devices/cc26x0r2/driverlib
+DRIVERLIB_DIR := $(TICCDEVICESRC)/driverlib
 DRIVERLIB_SRC := \
 	$(DRIVERLIB_DIR)/adi.c \
 	$(DRIVERLIB_DIR)/aon_batmon.c \
@@ -123,7 +123,7 @@ C_SOURCES += $(DRIVERLIB_SRC)
 C_OBJECTS := $(addprefix $(BUILD_DIR)/, $(C_SOURCES:.c=.o))
 
 # CFLAGS for anything in driverlib
-CFLAGS_DRIVERLIB += -Os
+CFLAGS_DRIVERLIB += -O3
 
 # Append extra CFLAGS depending on directory.
 $(BUILD_DIR)/$(DRIVERLIB_DIR)/%.o: CFLAGS+=$(CFLAGS_DRIVERLIB)
